@@ -1,14 +1,23 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { AppModule } from './app.module';
+import { RedisService } from './redis/redis.service';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   const configService = app.get(ConfigService);
   const dataSource = app.get(DataSource);
+  const redisService = app.get(RedisService);
   const port = Number(configService.get<string>('PORT', '3000'));
   const databaseHost = configService.get<string>('DATABASE_HOST', 'localhost');
   const databasePort = Number(
@@ -23,6 +32,13 @@ async function bootstrap() {
     logger.log(
       `Database connected: postgres://${databaseHost}:${databasePort}/${databaseName}`,
     );
+  }
+
+  const redisStatus = await redisService.ping();
+  if (redisStatus === 'PONG') {
+    logger.log('Redis connected: Upstash REST API is reachable');
+  } else {
+    logger.warn('Redis is configured, but did not return PONG');
   }
 
   await app.listen(port);
