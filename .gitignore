@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 .pnp
 .pnp.js
 
@@ -56,3 +57,4 @@ docker-compose.override.yml
 # Misc
 .turbo/
 .cache/
+agent.md
