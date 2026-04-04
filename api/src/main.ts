@@ -8,6 +8,17 @@ import { RedisService } from './redis/redis.service';
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const allowedOrigin = configService.get<string>(
+    'FRONTEND_URL',
+    'http://localhost:3000',
+  );
+
+  app.enableCors({
+    origin: allowedOrigin,
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    credentials: false,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -15,7 +26,6 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  const configService = app.get(ConfigService);
   const dataSource = app.get(DataSource);
   const redisService = app.get(RedisService);
   const port = Number(configService.get<string>('PORT', '3000'));
@@ -42,6 +52,7 @@ async function bootstrap() {
   }
 
   await app.listen(port);
+  logger.log(`CORS enabled for frontend origin ${allowedOrigin}`);
   logger.log(`Application is running on port ${port}`);
 }
 bootstrap().catch((error: unknown) => {

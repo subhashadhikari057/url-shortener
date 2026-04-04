@@ -1,13 +1,14 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --ink-950: #1d1622;
+  --ink-700: #4e4457;
+  --ink-500: #7a6f86;
+  --paper: #fffaf3;
+  --paper-strong: #fffefb;
+  --line: rgba(51, 34, 68, 0.12);
+  --accent: #ff6a3d;
+  --accent-deep: #c94921;
+  --mint: #d8f5dc;
+  --shadow: 0 24px 70px rgba(96, 59, 28, 0.12);
 }
 
 html {
@@ -24,9 +25,16 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink-950);
+  background:
+    radial-gradient(circle at top left, rgba(255, 206, 153, 0.95), transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 106, 61, 0.2), transparent 22%),
+    linear-gradient(180deg, #fffdf8 0%, #fff8ef 42%, #fff3e4 100%);
+  font-family:
+    "Avenir Next",
+    "Segoe UI",
+    "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -40,10 +48,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }
