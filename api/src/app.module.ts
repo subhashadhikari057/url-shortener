@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { LinksModule } from './links/links.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -19,9 +21,12 @@ import { AppService } from './app.service';
         password: configService.get<string>('DATABASE_PASSWORD', 'postgres'),
         database: configService.get<string>('DATABASE_NAME', 'url_shortener'),
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize:
+          configService.get<string>('DATABASE_SYNCHRONIZE', 'true') === 'true',
       }),
     }),
+    LinksModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
